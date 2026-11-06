@@ -109,7 +109,7 @@ No attribution is required under the CC0 licence. Credit is provided here to ack
 ## 10. Project Links
 
 ### GitHub Repository
-[View Source Code](PASTE_YOUR_GITHUB_LINK_HERE)
+[View Source Code](https://github.com/Pasindu07/MiniNatureMuseumAR.git)
 
 ### Live Application
-[Open Mini Nature Museum AR](https://jazzy-moonbeam-b4c399.netlify.app)
+[Open Mini Nature Museum AR](https://pasindu07.github.io/MiniNatureMuseumAR/)
