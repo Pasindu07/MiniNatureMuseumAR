@@ -103,9 +103,9 @@ No attribution is required under the CC0 licence. Credit is provided here to ack
 
 **Project Type:** Web-Based Augmented Reality Application
 
-**Module:** [Applied Group Project in Emerging Technologies]
+**Module:** Applied Group Project in Emerging Technologies
 
-**Academic Institution:** [Academic Institution: University of Plymouth]
+**Academic Institution:** Academic Institution: University of Plymouth
 ## 10. Project Links
 
 ### GitHub Repository
