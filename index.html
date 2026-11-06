@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mini Nature Museum AR</title>
+
+    <!-- A-Frame Library -->
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+
+    <!-- AR.js Library -->
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.js"></script>
+
+
+    <style>
+
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Status Banner */
+
+        #statusBanner {
+            position: fixed;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+
+            background-color: red;
+            color: white;
+
+            padding: 12px 25px;
+            border-radius: 10px;
+
+            font-size: 16px;
+            font-weight: bold;
+
+            z-index: 1000;
+            text-align: center;
+        }
+
+        /* Instruction Banner */
+
+        #instructions {
+            position: fixed;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+
+            padding: 10px 20px;
+            border-radius: 8px;
+
+            font-size: 13px;
+
+            z-index: 1000;
+            text-align: center;
+            width: 85%;
+        }
+
+    </style>
+
+
+    <script>
+
+        // =========================================
+        // 1. COLOR CHANGER COMPONENT
+        // =========================================
+
+        AFRAME.registerComponent('color-changer', {
+
+            init: function () {
+
+                const colors = [
+                    'red',
+                    'blue',
+                    'green',
+                    'yellow',
+                    'orange',
+                    'purple'
+                ];
+
+                let currentColor = 0;
+
+                this.el.addEventListener('click', function () {
+
+                    currentColor++;
+
+                    if (currentColor >= colors.length) {
+                        currentColor = 0;
+                    }
+
+                    this.setAttribute('material', 'color', colors[currentColor]);
+
+                });
+
+            }
+
+        });
+
+
+        // =========================================
+        // 2. GROW AND SHRINK COMPONENT
+        // =========================================
+
+        AFRAME.registerComponent('grow-toggle', {
+
+            init: function () {
+
+                let isBig = false;
+
+                this.el.addEventListener('click', function () {
+
+                    if (isBig === false) {
+
+                        this.setAttribute('scale', '1.5 1.5 1.5');
+
+                        isBig = true;
+
+                    } else {
+
+                        this.setAttribute('scale', '1 1 1');
+
+                        isBig = false;
+
+                    }
+
+                });
+
+            }
+
+        });
+
+
+        // =========================================
+        // 3. MARKER STATUS COMPONENT
+        // =========================================
+
+        AFRAME.registerComponent('marker-status', {
+
+            init: function () {
+
+                const banner = document.querySelector('#statusBanner');
+
+                // When marker is detected
+
+                this.el.addEventListener('markerFound', function () {
+
+                    banner.innerHTML = 'Marker Detected - AR Active';
+
+                    banner.style.backgroundColor = 'green';
+
+                });
+
+
+                // When marker is lost
+
+                this.el.addEventListener('markerLost', function () {
+
+                    banner.innerHTML = 'Marker Not Detected - Show Hiro Marker';
+
+                    banner.style.backgroundColor = 'red';
+
+                });
+
+            }
+
+        });
+
+    </script>
+
+</head>
+
+
+<body>
+
+
+    <!-- STATUS BANNER -->
+
+    <div id="statusBanner">
+
+        Marker Not Detected - Show Hiro Marker
+
+    </div>
+
+
+    <!-- INSTRUCTIONS -->
+
+    <div id="instructions">
+
+        Point your camera at the Hiro marker.
+        Tap the coloured sphere to change its colour.
+        Tap the blue box to grow or shrink it.
+
+    </div>
+
+
+
+    <!-- ========================================= -->
+    <!-- AR SCENE -->
+    <!-- ========================================= -->
+
+    <a-scene
+        embedded
+        vr-mode-ui="enabled: false"
+        renderer="logarithmicDepthBuffer: true"
+        arjs="sourceType: webcam; debugUIEnabled: false;">
+
+
+
+        <!-- 3D MODEL ASSET -->
+
+        <a-assets>
+
+            <a-asset-item
+                id="appleModel"
+                src="models/apple/food_apple_01.gltf">
+            </a-asset-item>
+
+        </a-assets>
+
+
+
+        <!-- ========================================= -->
+        <!-- HIRO MARKER -->
+        <!-- ========================================= -->
+
+        <a-marker
+            preset="hiro"
+            marker-status>
+
+
+            <!-- ===================================== -->
+            <!-- OBJECT 1: PLATFORM -->
+            <!-- ===================================== -->
+
+            <a-box
+                position="0 0 0"
+                width="2.5"
+                height="0.05"
+                depth="2.5"
+                color="#8B4513">
+
+            </a-box>
+
+
+
+            <!-- ===================================== -->
+            <!-- OBJECT 2: ROTATING CYLINDER -->
+            <!-- ===================================== -->
+
+            <a-cylinder
+                position="-0.8 0.55 0"
+                radius="0.25"
+                height="0.8"
+                color="#2E8B57"
+
+                animation="
+                    property: rotation;
+                    to: 0 360 0;
+                    dur: 4000;
+                    easing: linear;
+                    loop: true">
+
+            </a-cylinder>
+
+
+
+            <!-- ===================================== -->
+            <!-- OBJECT 3: BOUNCING SPHERE -->
+            <!-- ===================================== -->
+
+            <a-sphere
+                position="0.7 0.5 0"
+                radius="0.25"
+                color="red"
+                class="clickable"
+                color-changer
+
+                animation="
+                    property: position;
+                    from: 0.7 0.4 0;
+                    to: 0.7 1.1 0;
+                    dur: 1500;
+                    dir: alternate;
+                    loop: true;
+                    easing: easeInOutSine">
+
+            </a-sphere>
+
+
+
+            <!-- ===================================== -->
+            <!-- OBJECT 4: INTERACTIVE BLUE BOX -->
+            <!-- ===================================== -->
+
+            <a-box
+                position="0 0.45 -0.7"
+                width="0.5"
+                height="0.5"
+                depth="0.5"
+                color="blue"
+                class="clickable"
+                grow-toggle>
+
+            </a-box>
+
+
+
+            <!-- ===================================== -->
+            <!-- OBJECT 5: GREEN CONE -->
+            <!-- ===================================== -->
+
+            <a-cone
+                position="0.8 0.45 -0.7"
+                radius-bottom="0.3"
+                radius-top="0"
+                height="0.8"
+                color="#228B22">
+
+            </a-cone>
+
+
+
+            <!-- ===================================== -->
+            <!-- OBJECT 6: 3D AVOCADO MODEL -->
+            <!-- ===================================== -->
+
+            <a-entity
+                gltf-model="#appleModel"
+                position="-0.55 0.47 -0.15"
+                scale="4 4 4"
+                rotation="0 0 0">
+
+            </a-entity>
+
+
+
+            <!-- ===================================== -->
+            <!-- TEXT LABELS -->
+            <!-- ===================================== -->
+
+            <a-text
+                value="Mini Nature Museum"
+                position="-0.9 1.5 0"
+                color="white"
+                align="center"
+                width="4">
+
+            </a-text>
+
+
+            <a-text
+                value="Interactive Objects"
+                position="-0.8 1.2 0"
+                color="yellow"
+                align="center"
+                width="3">
+
+            </a-text>
+
+
+        </a-marker>
+
+
+
+        <!-- ========================================= -->
+        <!-- CAMERA -->
+        <!-- ========================================= -->
+
+        <a-entity
+            camera
+            cursor="rayOrigin: mouse"
+            raycaster="objects: .clickable">
+
+        </a-entity>
+
+
+    </a-scene>
+
+
+</body>
+
+</html>
