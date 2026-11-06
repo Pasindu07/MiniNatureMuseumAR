@@ -105,7 +105,7 @@ No attribution is required under the CC0 licence. Credit is provided here to ack
 
 **Module:** Applied Group Project in Emerging Technologies
 
-**Academic Institution:** University of Plymouth
+**Academic Institution:** University Of Plymouth
 ## 10. Project Links
 
 ### GitHub Repository
